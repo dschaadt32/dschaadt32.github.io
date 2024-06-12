@@ -1,11 +1,13 @@
 ---
 title: "Filter observations"
-output:
+output: 
+  html_document:
+    mathjax: null
+
 learnr::tutorial:
 progressive: true
 allow_skip: true
 runtime: shiny_prerendered
-
 
 ---
   
