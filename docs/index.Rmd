@@ -1,69 +1,115 @@
 ---
 title: "Filter observations"
 output: 
-  html_document:
-    mathjax: null
+
 
 learnr::tutorial:
 progressive: true
 allow_skip: true
 runtime: shiny_prerendered
-
 ---
-  
-  ```{r setup, include=FALSE}
+
+```{r setup, include=FALSE}
 library(learnr)
 library(tidyverse)
 library(nycflights13)
 library(Lahman)
+library(RSocrata)
+
+socrataUrl <-"https://data.somervillema.gov/resource" ## not sensitive
+
+generateUrl <- function (datasetID) paste(
+  socrataUrl, 
+  paste(datasetID, 'json', sep="."), 
+  sep="/"
+)
+
+## all of this is actually precomputed so the people can pick up anywhere in the excercise
+datasetID <- "pfjr-vzaw"
+url <- generateUrl(datasetID)   
+happinessSurveyData <- RSocrata::read.socrata(url)
+happinessSurveyData
 
 
-tutorial_options(
-  exercise.timelimit = 60,
-  # A checker function that compares the expected and actual results
-  exercise.checker = function(label, user_code, solution_code, check_code, envir_result, evaluate_result, ...) {
-    user_result <- eval(parse(text = user_code), envir = envir_result)
-    correct_result <- eval(parse(text = solution_code), envir = envir_result)
-    if (nrow(user_result) == nrow(correct_result) && all.equal(user_result, correct_result) == TRUE) {
-      return(list(correct = TRUE, message = "Great job!"))
-    } else {
-      return(list(correct = FALSE, message = "Check your filtering conditions and try again."))
-    }
+tutorial_options(exercise.eval = FALSE,
+exercise.timelimit = 60,
+# A checker function that compares the expected and actual results
+exercise.checker = function(label, user_code, solution_code, check_code, envir_result, evaluate_result, ...) {
+  if(user_code == solution_code){
+    return(list(correct = TRUE, message = "That's exactly how we did it!"))
   }
+  user_result <- eval(parse(text = user_code), envir = envir_result)
+  correct_result <- eval(parse(text = solution_code), envir = envir_result)
+  if (nrow(user_result) == nrow(correct_result) && all.equal(user_result, correct_result) == TRUE) {
+    return(list(correct = TRUE, message = "Great job!"))
+  } else {
+    return(list(correct = FALSE, message = "Check your answer and try again."))
+  }
+}
 )
 
 
 knitr::opts_chunk$set(error = TRUE)
-  ```
+```
+
 ## Welcome
 
-This is a chopped up tutorial I stole from [github](https://github.com/rstudio/learnr/blob/main/inst/tutorials/ex-data-filter/ex-data-filter.Rmd). We can do all kinds of fun Rmd in here and then do questions with hints and right / wrong like I show below. Yay for interns learning. 
+This tutorial introduces you to some of the work we do at SomerStat. The data we will be using comes from our annual Happiness Survey (insert description of this here), which this website reads from the [Open Data Portal](https://data.somervillema.gov/Health-Wellbeing/Somerville-Happiness-Survey-Responses-2011-2021/pfjr-vzaw/about_data). We will introduce you to some of what we use R for. According to the notably reliable Google Search AI, "R is useful for cleaning, importing, and visualizing data." We mostly use R for the first two of these use-cases.
 
-the correct answer to the question is something equivalent to this: filter(flights, dep_delay > 60, (dep_delay - arr_delay) > 30)
-
+There is a good chance that your time here will include analyzing data in R and/or reading/writing data to/from the Open Data Portal, so I hope this little tutorial is more helpful than harmful.
 
 ### Common mistakes
+
 Me (Derek) thinking I can code in R
 
+## Loading in the Happiness Survey Data from the Open Data Portal
 
-## Exercises
+This is roughly the workflow that I use to read data from the Open Data portal.
+```{r filterex1, exercise = TRUE}
+socrataUrl <-"https://data.somervillema.gov/resource" ## not sensitive
 
-### Exercise 1
+generateUrl <- function (datasetID) paste(
+  socrataUrl, 
+  paste(datasetID, 'json', sep="."), 
+  sep="/"
+)
+
+```
+
+```{r filterex2, exercise = TRUE}
+## datasetID <- 'some-string' ## TODO, find the datasetId on the Open Data Portal
+url <- generateUrl(datasetID)   
+happinessSurveyData <- RSocrata::read.socrata(url)
+happinessSurveyData
+```
+
+::: {#filterex2-hint}
+**Hint:** Check for the dataset id here, I typically find it in the url! https://data.somervillema.gov/Health-Wellbeing/Somerville-Happiness-Survey-Responses/pfjr-vzaw/about_data
+:::
+
+```{r filterex2-check}
+ "idk why there needs to be text in here"
+```
 
 
-1. Were delayed more than an hour, but made up more than 30 minutes in flight ## minimal viable sample makes this entirely out of context, the important thing is the checker is working and we can easily copy this format to make all the questions we could ever want. Possibly we make it Happiness Survey Related?
+```{r filterex2-solution}
+## TODO, find the datasetId on the Open Data Portal
+datasetID <- "pfjr-vzaw"
+url <- generateUrl(datasetID)   
+happinessSurveyData <- RSocrata::read.socrata(url)
 
-    ```{r filterex1, exercise = TRUE}
+```
 
-    ```
-    ```{r filterex1-solution}
-    filter(flights, dep_delay > 60, (dep_delay - arr_delay) > 30)
-    ```
 
-    <div id="filterex1-hint">
-    **Hint:** The time a plane makes up is `dep_delay - arr_delay`.
-    </div>
-    
-  ```{r filterex1-check}
-   "idk why there needs to be text in here"
-  ```
+
+## Let's Explore this data some!
+
+### Initial QA
+Something I often do once the code will compile and run is assume that I've made every mistake possible, so I like to get an overview of the dataset. For a dataset as large as the happiness survey, it can be tough to just open up excel and take a peek, so I often do this in R.
+
+```{r filterex4, exercise = TRUE}
+    summary(happinessSurveyData)
+```
+
+Continue adding anything we can think of, probably mostly introducing the packages we use a lot.
+
