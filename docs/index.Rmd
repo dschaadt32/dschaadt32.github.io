@@ -65,6 +65,7 @@ Me (Derek) thinking I can code in R
 ## Loading in the Happiness Survey Data from the Open Data Portal
 
 This is roughly the workflow that I use to read data from the Open Data portal.
+
 ```{r filterex1, exercise = TRUE}
 socrataUrl <-"https://data.somervillema.gov/resource" ## not sensitive
 
@@ -80,17 +81,16 @@ generateUrl <- function (datasetID) paste(
 ## datasetID <- 'some-string' ## TODO, find the datasetId on the Open Data Portal
 url <- generateUrl(datasetID)   
 happinessSurveyData <- RSocrata::read.socrata(url)
-happinessSurveyData
+
 ```
 
 ::: {#filterex2-hint}
-**Hint:** Check for the dataset id here, I typically find it in the url! https://data.somervillema.gov/Health-Wellbeing/Somerville-Happiness-Survey-Responses/pfjr-vzaw/about_data
+**Hint:** Check for the dataset id here, I typically find it in the url! <https://data.somervillema.gov/Health-Wellbeing/Somerville-Happiness-Survey-Responses/pfjr-vzaw/about_data>
 :::
 
 ```{r filterex2-check}
  "idk why there needs to be text in here"
 ```
-
 
 ```{r filterex2-solution}
 ## TODO, find the datasetId on the Open Data Portal
@@ -100,11 +100,10 @@ happinessSurveyData <- RSocrata::read.socrata(url)
 
 ```
 
-
-
 ## Let's Explore this data some!
 
 ### Initial QA
+
 Something I often do once the code will compile and run is assume that I've made every mistake possible, so I like to get an overview of the dataset. For a dataset as large as the happiness survey, it can be tough to just open up excel and take a peek, so I often do this in R.
 
 ```{r filterex4, exercise = TRUE}
@@ -112,4 +111,3 @@ Something I often do once the code will compile and run is assume that I've made
 ```
 
 Continue adding anything we can think of, probably mostly introducing the packages we use a lot.
-
